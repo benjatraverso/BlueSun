@@ -1,0 +1,19 @@
+
+conexion bluetooth jeje
+que el volante se vea entero
+el angulo cuando el volante esta libre tiene que ser 90
+usar gear=0 para reversa en lugar de -1
+
+volante a la izquierda/derecha
+
+diferentes controles
+	un boton full forward/backwards
+	un boton todo a la izquierda/derecha
+	single touchpad
+
+relacion input output configurable
+
+idioma?
+luces?
+bocina?
+https://www.youtube.com/watch?v=yu4xyW5c6zQ
