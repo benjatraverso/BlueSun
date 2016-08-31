@@ -9,7 +9,7 @@ void setup()
     pinMode(13,OUTPUT);
     digitalWrite(13,HIGH);
     delay(10000); // after led's connection, the module should be connected in this 10seconds to proceed with configuration
-    digitalWrite(13,LOW);// time expired, if not present then: desconect, reset and retry
+    digitalWrite(13,LOW);// time expired, if not present then: disconnect, reset and retry
     
     Serial.print("AT"); 
     delay(1000);
