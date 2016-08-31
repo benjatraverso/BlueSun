@@ -3,23 +3,17 @@
 const unsigned int FWD = 7;
 const unsigned int BWD = 8;
 const unsigned int SRV = 9;
-const unsigned int EN = 10;
+const unsigned int EN = 6;
 
 const unsigned int BACKWARDS = 0;
 const unsigned int FORWARD = 1;
-
-Servo myservo;  // create servo object to control a servo
-                // a maximum of eight servo objects can be created
-
-int gear = -1;
-int angle = 0;    // variable to store the servo position
-int power = 0;
+    
+Servo myservo;
 
 void setup()
 {
   pinMode(FWD, OUTPUT);
   pinMode(BWD, OUTPUT);
-  pinMode(EN, OUTPUT);
   
   Serial.begin(9600);  // initialize serial: 
   myservo.attach(SRV);  // attaches the servo on pin 9 to the servo object
@@ -33,36 +27,56 @@ void loop()
   // if there's any serial available, read it:
   while (Serial.available() > 0)
   {
-    // look for the next valid integer in the incoming serial stream:
-    gear = Serial.parseInt();
-    power = Serial.parseInt();
-    gear = 255 - constrain(gear, 0, 255);
-    power = 255 - constrain(power, 0, 255);
-    if( gear > 0 )
-    {
-      moveForward( power );
-    }
-    else if( gear < 0 )
-    {
-      moveBackwards( power );
-    }
+    char cReading = Serial.read();
+
+    Serial.println("cReading");
+    Serial.println(cReading);
     
-    angle = Serial.parseInt();
-    angle = 255 - constrain(angle, 0, 255);
-    myservo.write(angle);
+    switch(cReading)
+    {
+      case 'A':
+      {
+        Serial.read();
+        int iAngle = Serial.parseInt();
+        iAngle = constrain(iAngle, 0, 255);
+        Serial.println("iAngle");
+        Serial.println(iAngle);
+        myservo.write(iAngle);
+        break;
+      }
+      case 'G':
+      {
+        Serial.read();
+        int iGear = Serial.parseInt();
+        iGear = constrain(iGear, 0, 255);
+        digitalWrite( FWD, LOW );
+        digitalWrite( BWD, LOW );
+        Serial.println("iGear");
+        Serial.println(iGear);
+        digitalWrite( FWD, iGear );
+        digitalWrite( BWD, !(bool)iGear );
+        break;
+      }
+      case 'T':
+      {
+        Serial.read();
+        int iThrottle = Serial.parseInt();
+        iThrottle = constrain(iThrottle, 0, 255);
+        Serial.println("iThrottle");
+        Serial.println(iThrottle);
+        analogWrite( EN, iThrottle );
+        break;
+      }
+      default:
+      {
+        //ignore the reading...
+        break;
+      }
+    }    
   }
-}
-
-void moveForward( int speed )
-{
-  digitalWrite( FWD, HIGH );
-  digitalWrite( BWD, LOW );
-  analogWrite( EN, speed );
-}
-
-void moveBackwards( int speed )
-{
-  digitalWrite( BWD, HIGH );
+  
   digitalWrite( FWD, LOW );
-  analogWrite( EN, speed );
+  digitalWrite( BWD, LOW );
+  analogWrite( EN, LOW );
+  myservo.write(90);
 }
