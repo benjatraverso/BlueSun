@@ -19,7 +19,7 @@ public class Wheel
 		Bitmap b1 = ResLoader.getBmp(R.drawable.wheel);
 		bmp = Bitmap.createScaledBitmap(b1, b1.getWidth() / 3, b1.getHeight() / 3, true);
 
-		center = new PointF(GamePanel.WIDTH / 4, GamePanel.HEIGHT - (bmp.getHeight() * 0.25f));
+		center = new PointF(GamePanel.WIDTH * 0.25f, GamePanel.HEIGHT - (bmp.getHeight() * 0.6f));
 
 		fingerId = -1;
 		initialX = 0;

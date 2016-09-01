@@ -1,5 +1,7 @@
 package ar.com.kiel814.phonedrive;
 
+import android.app.Activity;
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,6 +12,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 {
@@ -30,10 +33,17 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 	Paint txtPaint;
 
-	public GamePanel(Context context)
+	Activity activity;
+	BTManager bt;
+
+	float delay;
+	String message;
+
+	public GamePanel(Context _context, Activity _activity)
 	{
-		super(context);
+		super(_context);
 		getHolder().addCallback(this);
+		activity = _activity;
 	}
 
 	@Override
@@ -51,6 +61,22 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 		txtPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		txtPaint.setTextSize(40);
 		txtPaint.setColor(Color.BLACK);
+
+		bt = new BTManager();
+		bt.initialize(activity);
+		Set<BluetoothDevice> devices = bt.getPairedDevices();
+		for(BluetoothDevice d : devices)
+		{
+			if(d.getName().contains("AUTITO"))
+			{
+				bt.connect(d.getAddress());
+				//bt.send(testmsg);
+				break;
+			}
+		}
+
+		delay = 0;
+		message = "";
 
 		thread = new GameThread(getHolder(), this);
 		thread.start();
@@ -87,6 +113,18 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 	{
 		wheel.update(dt);
 		throttle.update(dt);
+
+		delay -= dt;
+		if(delay < 0 &&  bt.isConnected())
+		{
+			delay = 0.5f;
+			message = "<v=1.0"
+					+ ";A=" + wheel.getServoAngle()
+					+ ";G=" + throttle.getGear()
+					+ ";T=" + throttle.getPower()
+					+">\n\r";
+			bt.send(message);
+		}
 	}
 
 	@Override
@@ -104,6 +142,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 		canvas.drawText("Gear: " + throttle.getGear(), 50.0f, 50.0f, txtPaint);
 		canvas.drawText("Power: " + throttle.getPower(), 50.0f, 100.0f, txtPaint);
 		canvas.drawText("Angle: " + wheel.getServoAngle(), 50.0f, 150.0f, txtPaint);
+		canvas.drawText("Message: " + message, 50.0f, 200.0f, txtPaint);
 
 		Dbg.draw(canvas);
 

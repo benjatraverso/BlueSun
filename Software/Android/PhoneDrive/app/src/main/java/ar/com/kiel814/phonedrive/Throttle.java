@@ -90,7 +90,7 @@ public class Throttle
 	public void setFinger(int id, float y)
 	{
 		fingerId = id;
-		fingerY = y;
+		updateFinger(y);
 	}
 
 	public void updateFinger(float y)
@@ -113,16 +113,12 @@ public class Throttle
 
 	public int getGear()
 	{
-		int gear = 0;
+		int gear = 1;
 		if(fingerId >= 0)
 		{
-			if(fingerY < center.y)
+			if(fingerY > center.y)
 			{
-				gear = 1;
-			}
-			else if(fingerY > center.y)
-			{
-				gear = -1;
+				gear = 0;
 			}
 		}
 		return gear;

@@ -22,7 +22,7 @@ public class Game extends Activity
 		Dbg.get().init();
 		ResLoader.get().init(getResources());
 
-		panel = new GamePanel(this);
+		panel = new GamePanel(this, this);
 		setContentView(panel);
 	}
 
