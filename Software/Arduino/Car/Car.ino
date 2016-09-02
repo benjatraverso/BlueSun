@@ -24,13 +24,14 @@ void setup()
 
 void loop()
 {
-  // if there's any serial available, read it:
+  digitalWrite( FWD, LOW );
+  digitalWrite( BWD, LOW );
+  analogWrite( EN, LOW );
+  myservo.write(90);
+
   while (Serial.available() > 0)
   {
     char cReading = Serial.read();
-
-    Serial.println("cReading");
-    Serial.println(cReading);
     
     switch(cReading)
     {
@@ -38,9 +39,7 @@ void loop()
       {
         Serial.read();
         int iAngle = Serial.parseInt();
-        iAngle = constrain(iAngle, 0, 255);
-        Serial.println("iAngle");
-        Serial.println(iAngle);
+        iAngle = constrain(iAngle, 32, 160);//for this stearing we cant go further than these values
         myservo.write(iAngle);
         break;
       }
@@ -51,8 +50,6 @@ void loop()
         bool bGear = (bool)constrain(iGear, 0, 255);
         digitalWrite( FWD, LOW );
         digitalWrite( BWD, LOW );
-        Serial.println("iGear");
-        Serial.println(iGear);
         digitalWrite( FWD, iGear );
         digitalWrite( BWD, !iGear );
         break;
@@ -62,8 +59,6 @@ void loop()
         Serial.read();
         int iThrottle = Serial.parseInt();
         iThrottle = constrain(iThrottle, 0, 255);
-        Serial.println("iThrottle");
-        Serial.println(iThrottle);
         analogWrite( EN, iThrottle );
         break;
       }
