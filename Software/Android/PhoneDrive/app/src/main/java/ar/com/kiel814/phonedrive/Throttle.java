@@ -111,25 +111,12 @@ public class Throttle
 		fingerId = -1;
 	}
 
-	public int getGear()
-	{
-		int gear = 1;
-		if(fingerId >= 0)
-		{
-			if(fingerY > center.y)
-			{
-				gear = 0;
-			}
-		}
-		return gear;
-	}
-
 	public int getPower()
 	{
 		int power = 0;
 		if(fingerId >= 0)
 		{
-			power = Math.abs((int)((center.y - fingerY) * scale));
+			power = (int)((center.y - fingerY) * scale);
 		}
 		return power;
 	}

@@ -39,7 +39,6 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 	String message;
 
 	int lastA;
-	int lastG;
 	int lastT;
 
 	public GamePanel(Context _context, Activity _activity)
@@ -73,13 +72,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 			if(d.getName().contains("AUTITO"))
 			{
 				bt.connect(d.getAddress());
-				//bt.send(testmsg);
 				break;
 			}
 		}
 
 		lastA = -1;
-		lastG = -1;
 		lastT = -1;
 
 		message = "";
@@ -123,32 +120,26 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 		if(bt.isConnected())
 		{
 			boolean newData = false;
-			message = "<v=1.0";
+			String msg = "";
 			int A = wheel.getServoAngle();
 			if(A != lastA)
 			{
 				lastA = A;
 				newData = true;
-				message += ";A=" + A;
-			}
-			int G = throttle.getGear();
-			if(G != lastG)
-			{
-				lastG = G;
-				newData = true;
-				message += ";G=" + G;
+				msg += ";A=" + A;
 			}
 			int T = throttle.getPower();
 			if(T != lastT)
 			{
 				lastT = T;
 				newData = true;
-				message += ";T=" + T;
+				msg += ";G=" + (T >= 0 ? "1" : "0");
+				msg += ";T=" + Math.abs(T);
 			}
 
 			if(newData)
 			{
-				message += ">\n\r";
+				message = "<v=1.0" + msg + ">\n\r";
 				bt.send(message);
 			}
 		}
@@ -166,7 +157,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 		wheel.draw(canvas);
 		throttle.draw(canvas);
 
-		canvas.drawText("Gear: " + throttle.getGear(), 50.0f, 50.0f, txtPaint);
+		//canvas.drawText("Gear: " + throttle.getGear(), 50.0f, 50.0f, txtPaint);
 		canvas.drawText("Power: " + throttle.getPower(), 50.0f, 100.0f, txtPaint);
 		canvas.drawText("Angle: " + wheel.getServoAngle(), 50.0f, 150.0f, txtPaint);
 		canvas.drawText("Message: " + message, 50.0f, 200.0f, txtPaint);
