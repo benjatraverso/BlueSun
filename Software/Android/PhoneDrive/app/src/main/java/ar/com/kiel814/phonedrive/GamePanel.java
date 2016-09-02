@@ -36,8 +36,11 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 	Activity activity;
 	BTManager bt;
 
-	float delay;
 	String message;
+
+	int lastA;
+	int lastG;
+	int lastT;
 
 	public GamePanel(Context _context, Activity _activity)
 	{
@@ -75,7 +78,10 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 			}
 		}
 
-		delay = 0;
+		lastA = -1;
+		lastG = -1;
+		lastT = -1;
+
 		message = "";
 
 		thread = new GameThread(getHolder(), this);
@@ -114,16 +120,37 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 		wheel.update(dt);
 		throttle.update(dt);
 
-		delay -= dt;
-		if(delay < 0 &&  bt.isConnected())
+		if(bt.isConnected())
 		{
-			delay = 0.5f;
-			message = "<v=1.0"
-					+ ";A=" + wheel.getServoAngle()
-					+ ";G=" + throttle.getGear()
-					+ ";T=" + throttle.getPower()
-					+">\n\r";
-			bt.send(message);
+			boolean newData = false;
+			message = "<v=1.0";
+			int A = wheel.getServoAngle();
+			if(A != lastA)
+			{
+				lastA = A;
+				newData = true;
+				message += ";A=" + A;
+			}
+			int G = throttle.getGear();
+			if(G != lastG)
+			{
+				lastG = G;
+				newData = true;
+				message += ";G=" + G;
+			}
+			int T = throttle.getPower();
+			if(T != lastT)
+			{
+				lastT = T;
+				newData = true;
+				message += ";T=" + T;
+			}
+
+			if(newData)
+			{
+				message += ">\n\r";
+				bt.send(message);
+			}
 		}
 	}
 
