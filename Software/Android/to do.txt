@@ -1,21 +1,42 @@
 
-conexion bluetooth jeje
-que el volante se vea entero
+Poner el volante a la derecha dor defecto y como opción a la izquierda.
+Bluetooth
+	Un indicador en la pantalla principal del estado de conexión.
+	Una pantalla aparte para toda la config bluetooth.
+		Encender/apagar bluetooth.
+			Si está apagado, no se muestra mas nada.
+		Si estoy conectado a un dispositivo, mostrarlo.
+			Opción para desconectar.
+		Lista de dispositivos vinculados.
+			Conectar dispositivo.
+			Olvidar vinculo.
+		Lista de dispositivos disponibles.
+			Vincular dispositivo.
+		Botón refresh para ambas listas.
 
-volante a la izquierda/derecha
+Diferentes controles
+	Un botón acelera a fondo. Otro retrocede a fondo.
+	Un botón gira la dirección toda a la izquierda. Otro a la derecha
+	Un cuadrado dividido en 4 cuadrantes. Solo toma 1 input. El eje X controla la dirección y el Y la velocidad.
 
-diferentes controles
-	un boton full forward/backwards
-	un boton todo a la izquierda/derecha
-	single touchpad
+Otras opciones
+Relacion input-response configurable.
+"Return to zero" instantaneo, rápido o lento.
+Dead zone.
 
-relacion input output configurable
-"return to zero" instantaneo o lento
-dead zone
+Seleccionar idioma.
+Luces
+	Posición. Bajas. Altas.
+	Giro. Balizas.
+	Interiores.
+	Freno.
+	Marcha atrás.
+	Chasis.
+Bocina.
+Nitro.
 
-idioma?
-luces?
-bocina?
+Maniobra de estacionamiento.
+Alarma.
 
 
 https://www.youtube.com/watch?v=yu4xyW5c6zQ
