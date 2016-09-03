@@ -17,19 +17,16 @@ void setup()
   
   Serial.begin(9600);  // initialize serial: 
   myservo.attach(SRV);  // attaches the servo on pin 9 to the servo object
- 
-  Serial.print("Arduino control Servo Motor Connected OK");
-  Serial.print('\n');
-}
 
-void loop()
-{
   digitalWrite( FWD, LOW );
   digitalWrite( BWD, LOW );
   analogWrite( EN, LOW );
   myservo.write(90);
+}
 
-  while (Serial.available() > 0)
+void loop()
+{
+  if( Serial.available() > 0 )
   {
     char cReading = Serial.read();
     
@@ -40,6 +37,8 @@ void loop()
         Serial.read();
         int iAngle = Serial.parseInt();
         iAngle = constrain(iAngle, 32, 160);//for this stearing we cant go further than these values
+        Serial.println("iAngle");
+        Serial.println(iAngle);
         myservo.write(iAngle);
         break;
       }
@@ -48,6 +47,8 @@ void loop()
         Serial.read();
         int iGear = Serial.parseInt();
         bool bGear = (bool)constrain(iGear, 0, 255);
+        Serial.println("iGear");
+        Serial.println(iGear);
         digitalWrite( FWD, LOW );
         digitalWrite( BWD, LOW );
         digitalWrite( FWD, iGear );
@@ -59,6 +60,8 @@ void loop()
         Serial.read();
         int iThrottle = Serial.parseInt();
         iThrottle = constrain(iThrottle, 0, 255);
+        Serial.println("iThrottle");
+        Serial.println(iThrottle);
         analogWrite( EN, iThrottle );
         break;
       }
@@ -69,9 +72,4 @@ void loop()
       }
     }    
   }
-  
-  digitalWrite( FWD, LOW );
-  digitalWrite( BWD, LOW );
-  analogWrite( EN, LOW );
-  myservo.write(90);
 }
