@@ -10,6 +10,9 @@ const unsigned int FORWARD = 1;
     
 Servo myservo;
 
+int passedTime = millis();
+bool bConnected = false;
+
 void setup()
 {
   pinMode(FWD, OUTPUT);
@@ -25,16 +28,16 @@ void setup()
 }
 
 void loop()
-{
+{  
   if( Serial.available() > 0 )
   {
     char cReading = Serial.read();
+    passedTime = millis() - passedTime;
     
     switch(cReading)
     {
       case 'A':
       {
-        Serial.read();
         int iAngle = Serial.parseInt();
         iAngle = constrain(iAngle, 32, 160);//for this stearing we cant go further than these values
         Serial.println("iAngle");
@@ -44,9 +47,8 @@ void loop()
       }
       case 'G':
       {
-        Serial.read();
         int iGear = Serial.parseInt();
-        bool bGear = (bool)constrain(iGear, 0, 255);
+        bool bGear = (bool)constrain(iGear, 100, 255);
         Serial.println("iGear");
         Serial.println(iGear);
         digitalWrite( FWD, LOW );
@@ -57,7 +59,6 @@ void loop()
       }
       case 'T':
       {
-        Serial.read();
         int iThrottle = Serial.parseInt();
         iThrottle = constrain(iThrottle, 0, 255);
         Serial.println("iThrottle");
@@ -71,5 +72,14 @@ void loop()
         break;
       }
     }    
+  }
+
+  // if been two seconds without receiving data, either valid or not, set everything to low
+  if( passedTime > 2000 )
+  {
+    digitalWrite( FWD, LOW );
+    digitalWrite( BWD, LOW );
+    analogWrite( EN, LOW );
+    myservo.write(90);
   }
 }
