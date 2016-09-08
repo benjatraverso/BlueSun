@@ -40,6 +40,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 	int lastA;
 	int lastT;
+	float msgTimer;
 
 	public GamePanel(Context _context, Activity _activity)
 	{
@@ -78,6 +79,7 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 		lastA = -1;
 		lastT = -1;
+		msgTimer = 0;
 
 		message = "";
 
@@ -119,27 +121,30 @@ public class GamePanel extends SurfaceView implements SurfaceHolder.Callback
 
 		if(bt.isConnected())
 		{
+			msgTimer += dt;
 			boolean newData = false;
 			String msg = "";
+
 			int A = wheel.getServoAngle();
 			if(A != lastA)
 			{
 				lastA = A;
 				newData = true;
-				msg += ";A=" + A;
+				msg += "A" + A + ";";
 			}
 			int T = throttle.getPower();
 			if(T != lastT)
 			{
 				lastT = T;
 				newData = true;
-				msg += ";G=" + (T >= 0 ? "1" : "0");
-				msg += ";T=" + Math.abs(T);
+				msg += "G" + (T >= 0 ? "1" : "0") + ";";
+				msg += "T" + Math.abs(T) + ";";
 			}
 
-			if(newData)
+			if(newData || msgTimer > 0.5f)
 			{
-				message = "<v=1.0" + msg + ">\n\r";
+				msgTimer = 0;
+				message = msg + "\n\r";
 				bt.send(message);
 			}
 		}
